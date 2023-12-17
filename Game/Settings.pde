@@ -20,6 +20,25 @@ class Settings{
     textAlign(CENTER,CENTER);
     textSize(a/3);
     
+    //Specific object catch button............................
+   if(overRect(b, 10, rectW, rectH)==true){  
+      fill(darkblue);
+      stroke(darkblue);
+    }
+    else{
+      fill(blue);
+      stroke(blue);
+    }
+    rect(b, 10, rectW, rectH, 20);
+    fill(white);
+
+    if(specialCatchMode==true){
+      text("Catch only cupcakes!", width/2, rectH/2 + 10);
+    }
+    else{
+      text("Catch 'em all!", width/2, rectH/2 + 10);
+    }
+    
     //Music On/Off button............................
    if(overRect(b, a, rectW, rectH)==true){  
       fill(darkblue);
@@ -221,9 +240,16 @@ class Settings{
   void myMousePressed() {
 
    
-    
-    //Music On/Off
-    if (overRect(b, a, rectW, rectH)==true){
+    if (overRect(b, 0, rectW, rectH)==true){
+      click.play();
+      if(specialCatchMode==true){
+        specialCatchMode=false;
+      }
+      else{
+        specialCatchMode=true;
+      }
+    }
+    else if (overRect(b, a, rectW, rectH)==true){    //Music On/Off
       click.play();
       if(musicOn==true){
         musicOn=false;

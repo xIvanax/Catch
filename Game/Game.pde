@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 //booleans for screen manipulation
-boolean homeB, firstGameB, highscoresB, gameOverB, settingsB;
+boolean homeB, firstGameB, highscoresB, gameOverB, settingsB, isPaused;
 Home home;
 FirstGame firstGame;
 Highscores highscores;
@@ -17,6 +17,7 @@ PImage background1;
 PImage heart;
 PImage heartEmpty;
 PImage leftArrow;
+PImage playpause;
 PImage logo;
 PImage[] objectImages;
 
@@ -41,7 +42,15 @@ SoundFile song1;
 SoundFile error;
 SoundFile click;
 SoundFile pop;
+SoundFile star;
+SoundFile strength;
+SoundFile shield;
+SoundFile snail;
+SoundFile bomb;
+SoundFile miss;
+SoundFile life;
 boolean musicOn;
+boolean specialCatchMode;
 boolean mode; //true->mouse, false ->keyboard
 int volume;
 
@@ -71,11 +80,13 @@ void setup() {
   heart = loadImage("heart.png");
   heartEmpty = loadImage("heartEmpty.png");
   leftArrow = loadImage("left-arrow.png");
+  playpause = loadImage("playpause.png");
   logo = loadImage("Capture-removebg-preview.png");
 
   heart.resize(30, 0);
   heartEmpty.resize(30, 0);
   leftArrow.resize(35, 0);
+  playpause.resize(50, 0);
 
 //.............................FONT............................
   f = loadFont("ProcessingSansPro-Semibold-48.vlw");
@@ -87,6 +98,7 @@ void setup() {
   highscoresB = false;
   gameOverB = false;
   settingsB = false;
+  isPaused = false;
 
 //.............................SOUND............................
   //load songs
@@ -94,15 +106,28 @@ void setup() {
   error = new SoundFile(this, "mixkit-electric-pop-2365.wav");
   click = new SoundFile(this, "mixkit-plastic-bubble-click-1124.wav");
   pop = new SoundFile(this, "mixkit-long-pop-2358.wav");
+  star = new SoundFile(this, "star.wav");
+  strength = new SoundFile(this, "strength.wav");
+  shield = new SoundFile(this, "shield.wav");
+  snail = new SoundFile(this, "snail.wav");
+  bomb = new SoundFile(this, "bomb.wav");
+  miss = new SoundFile(this, "miss.wav");
+  life = new SoundFile(this, "life.wav");
   //set volume
   click.amp(0.3);
   pop.amp(0.5);
+  star.amp(0.5);
+  strength.amp(0.5);
+  shield.amp(0.5);
+  snail.amp(0.5);
   
   musicOn=true;
   volume=100;
   
   //false -> keyboard
   mode=false;
+  //false -> regular mode (catch everything)
+  specialCatchMode=false;
   
   init();
 
