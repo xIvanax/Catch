@@ -8,8 +8,8 @@ class FirstGame{
   int time1,time2,timespeed1,timespeed2;
   float time,low,up;
   float secondsToFall;
-  float durationOfBiggerBasket;
-  float timeBasketResized = 0;
+  float durationOfBiggerBasket = 0, durationOfProtection = 0;
+  float timeBasketResized = 0, timeProtectionStarted = 0;
   int originalBasketWidth, originalBasketHeight;
   
   FirstGame(){
@@ -23,13 +23,15 @@ class FirstGame{
     low=700;
     up=1500;
     secondsToFall=3;
-    durationOfBiggerBasket=0;
     originalBasketWidth = basket.width;
     originalBasketHeight = basket.height;
   }
   
   void myDraw(){
-    
+    if(millis() - timeProtectionStarted >= durationOfProtection * 1000){
+      print("not protected\n");
+      print(millis() + "\n");
+    }
     time2=millis();
     timespeed2=millis();
     
@@ -72,26 +74,44 @@ class FirstGame{
        && obj.posX+obj.width/2>X-basket.width/2-50 && obj.posX+obj.width/2<X+basket.width/2+50 && mode==false)){
         if(obj.bomb==false){
           pop.play();
-          if(obj.points==1 && lives<3) lives++;
+          if(obj.points==1 && lives<3) lives++; //srce
           else if(obj.points==2){//puz
            low=700;
            up=1500;
            secondsToFall=3;
           }
           else if(obj.points==3){//povecanje kosarice
+            if (millis() - timeBasketResized >= durationOfBiggerBasket * 1000){
+              basket.resize(basket.width*=1.2, basket.height*=1.2);
+              timeBasketResized = millis();
+            }
             durationOfBiggerBasket += 5;
-            basket.resize(basket.width*=1.2, basket.height*=1.2);
-            timeBasketResized = millis();
           }
-          else if(obj.points!=0 && obj.points!=1 && obj.points!=2){ //nije srce, nije puz, nije bomba
+          else if(obj.points==4){//dodatni bodovi
+            score += 10;
+          }
+          else if(obj.points==6){//zastita od bombi
+            if (millis() - timeProtectionStarted >= durationOfProtection * 1000){
+              timeProtectionStarted = millis();
+              durationOfProtection = 0;
+              print("protected\n");
+              print(millis() + "\n");
+            }
+            durationOfProtection += 5;
+          }
+          else if(obj.points!=0 && obj.points!=1 && obj.points!=2
+          && obj.points!=3 && obj.points!=4 && obj.points!=6){ //nije srce, nije puz, nije bomba
               score+=obj.points;
           }  
         }
         else{
-          error.play();
-          lives--;
-          if(lives<=0)
-            setGameOver();
+          if (millis() - timeProtectionStarted >= durationOfProtection * 1000){
+            durationOfProtection = 0;
+            error.play();
+            lives--;
+            if(lives<=0)
+              setGameOver();
+          }
         }
         objects.remove(i);
       }
@@ -109,8 +129,14 @@ class FirstGame{
       else if(rnd>=17 && rnd<20){
         obj=new FallingObject(rnd, int(random(0,width-width/10)), 2, false); //puz
       }
-      else if(rnd>=20){
+      else if(rnd>=20 && rnd<23){
         obj=new FallingObject(rnd, int(random(0,width-width/10)), 3, false); //veca kosarica
+      }
+      else if(rnd>=23 && rnd<26){
+        obj=new FallingObject(rnd, int(random(0,width-width/10)), 4, false); //veca kosarica
+      }
+      else if(rnd>=26){
+        obj=new FallingObject(rnd, int(random(0,width-width/10)), 6, false); //veca kosarica
       }
       else{
         obj=new FallingObject(rnd, int(random(0,width-width/10)), 5, false);
@@ -176,6 +202,7 @@ class FirstGame{
         image(basket, mouseX - basket.width / 2, height - basket.height, basket.width, basket.height);
       } else {
         // Basket is back to normal size
+        durationOfBiggerBasket = 0;
         basket.resize(originalBasketWidth, originalBasketHeight);
         image(basket, mouseX - basket.width / 2, height - originalBasketHeight, originalBasketWidth, originalBasketHeight);
       }
@@ -186,6 +213,7 @@ class FirstGame{
         image(basket, X, height-basket.height, basket.width, basket.height);
       } else {
         // Basket is back to normal size
+        durationOfBiggerBasket = 0;
         basket.resize(originalBasketWidth, originalBasketHeight);
         image(basket, X, height-originalBasketHeight, originalBasketWidth, originalBasketHeight);
       }
