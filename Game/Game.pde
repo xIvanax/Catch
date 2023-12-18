@@ -49,6 +49,7 @@ SoundFile snail;
 SoundFile bomb;
 SoundFile miss;
 SoundFile life;
+SoundFile wrong;
 boolean musicOn;
 boolean specialCatchMode;
 boolean mode; //true->mouse, false ->keyboard
@@ -113,6 +114,7 @@ void setup() {
   bomb = new SoundFile(this, "bomb.wav");
   miss = new SoundFile(this, "miss.wav");
   life = new SoundFile(this, "life.wav");
+  wrong = new SoundFile(this, "wrong.wav");
   //set volume
   click.amp(0.3);
   pop.amp(0.5);

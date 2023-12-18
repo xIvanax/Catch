@@ -59,7 +59,6 @@ class FirstGame{
           objects.remove(i);
           if(obj.bomb==false && obj.points==5){
             if(specialCatchMode==true && obj.index==8 || specialCatchMode==false){
-              error.play();
               miss.play();
               lives--;
               if(lives<=0)
@@ -73,7 +72,6 @@ class FirstGame{
          (obj.posY+obj.height>height-basket.height && obj.posY<height-basket.height
          && obj.posX+obj.width/2>X-basket.width/2-50 && obj.posX+obj.width/2<X+basket.width/2+50 && mode==false)){
            if(obj.bomb==false){
-            pop.play();
             if(obj.points==1 && lives<3){
               life.play();
               lives++; //srce
@@ -108,11 +106,12 @@ class FirstGame{
             && obj.points!=3 && obj.points!=4 && obj.points!=6){ //nije srce, nije puz, nije bomba
                 if(specialCatchMode==false){
                   score+=obj.points;
+                  pop.play();
                 } else{
                   if(obj.index==8){
                     score+=obj.points;
                   }else{
-                    error.play();
+                    wrong.play();
                     lives--;
                     if(lives<=0)
                       setGameOver();
@@ -123,6 +122,7 @@ class FirstGame{
           else{
             if (millis() - timeProtectionStarted >= durationOfProtection * 1000){
               bomb.play();
+              print("b");
               durationOfProtection = 0;
               error.play();
               lives--;
