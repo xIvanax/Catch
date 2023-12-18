@@ -122,7 +122,6 @@ class FirstGame{
           else{
             if (millis() - timeProtectionStarted >= durationOfProtection * 1000){
               bomb.play();
-              print("b");
               durationOfProtection = 0;
               error.play();
               lives--;
